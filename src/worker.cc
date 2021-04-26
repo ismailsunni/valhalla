@@ -947,11 +947,19 @@ void from_json(rapidjson::Document& doc, Options& options) {
   }
 
   // get the avoid chinese polygon in there
-  auto chinese_polygon = rapidjson::get_child_optional(doc, "/chinese_polygon");
-  if (chinese_polygon) {
-    valhalla::Options_Ring* ring_pbf = options.mutable_chinese_polygon();
+  auto chinese_polygons = rapidjson::get_child_optional(doc, "/chinese_polygon");
+  if (chinese_polygons) {
+    auto* rings_pbf = options.mutable_chinese_polygons();
+    // valhalla::Options_Ring* ring_pbf = options.mutable_chinese_polygon();
     try {
-      parse_ring(ring_pbf, *chinese_polygon);
+      for (const auto& req_poly : chinese_polygons->GetArray()) {
+        auto* ring = rings_pbf->Add();
+        parse_ring(ring, req_poly);
+      }
+      // auto* ring = rings_pbf->Add();
+
+      // parse_ring(ring, chinese_polygon);
+      // parse_ring(ring_pbf, *chinese_polygon);
     } catch (...) { throw valhalla_exception_t{137}; }
   }
 

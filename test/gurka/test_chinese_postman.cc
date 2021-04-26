@@ -151,13 +151,17 @@ TEST_P(ChinesePostmanTest, TestChinesePostmanSimple) {
   std::vector<ring_bg_t> avoid_rings;
   avoid_rings.push_back(avoid_ring);
 
+  std::vector<ring_bg_t> chinese_rings;
+  chinese_rings.push_back(chinese_ring);
+
   // build request manually for now
   auto lls = {chinese_postman_map.nodes["A"], chinese_postman_map.nodes["A"]};
 
   rapidjson::Document doc;
   doc.SetObject();
   auto& allocator = doc.GetAllocator();
-  auto chinese_polygon = get_chinese_polygon(chinese_ring, allocator);
+  // auto chinese_polygon = get_chinese_polygon(chinese_ring, allocator);
+  auto chinese_polygon = get_avoid_polys(chinese_rings, allocator);
   auto avoid_polygons = get_avoid_polys(avoid_rings, allocator);
   auto req = build_local_req(doc, allocator, lls, GetParam(), chinese_polygon, avoid_polygons);
 
