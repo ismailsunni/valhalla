@@ -199,6 +199,21 @@ std::unordered_set<vb::GraphId> edges_in_ring(const valhalla::Options_Ring& ring
         auto edge_info = tile->edgeinfo(edge->edgeinfo_offset());
         bool is_within = false;
         is_within = bg::within(edge_info.shape(), ring_bg);
+
+        std::vector<midgard::PointLL> original_line{edge_info.shape()[0], edge_info.shape()[1]};
+        std::vector<midgard::PointLL> reversed_line{edge_info.shape()[1], edge_info.shape()[0]};
+        if (bg::within(original_line, ring_bg) != bg::within(reversed_line, ring_bg)) {
+          std::cout << "Test within issue\n";
+          std::cout << "original_line: (" << original_line[0].first << ", " << original_line[0].second
+                    << "), (" << original_line[1].first << ", " << original_line[1].second << ")\n";
+          std::cout << "reversed_line: (" << reversed_line[0].first << ", " << reversed_line[0].second
+                    << "), (" << reversed_line[1].first << ", " << reversed_line[1].second << ")\n";
+          std::cout << "original_line is_within: "
+                    << (bg::within(original_line, ring_bg) ? "yes" : "no") << std::endl;
+          std::cout << "reversed_line is_within: "
+                    << (bg::within(reversed_line, ring_bg) ? "yes" : "no") << std::endl;
+        }
+
         if (is_within) {
           cp_edge_ids.emplace(edge_id);
           cp_edge_ids.emplace(
