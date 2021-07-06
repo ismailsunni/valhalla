@@ -149,17 +149,17 @@ std::vector<PathInfo> buildPath(GraphReader& graphreader,
                       label.transition_cost(), recovered_inner_edges.count(label.edgeid()));
   };
 
-  float source_pct;
-  try {
-    source_pct = find_percent_along(origin, path_edges.front());
-  } catch (...) { throw std::logic_error("Could not find candidate edge used for origin label"); }
+  float source_pct = 1.0;
+  // try {
+  //   source_pct = find_percent_along(origin, path_edges.front());
+  // } catch (...) { throw std::logic_error("Could not find candidate edge used for origin label"); }
 
-  float target_pct;
-  try {
-    target_pct = find_percent_along(dest, path_edges.back());
-  } catch (...) {
-    throw std::logic_error("Could not find candidate edge used for destination label");
-  }
+  float target_pct = 1.0;
+  // try {
+  //   target_pct = find_percent_along(dest, path_edges.back());
+  // } catch (...) {
+  //   throw std::logic_error("Could not find candidate edge used for destination label");
+  // }
 
   // recost edges in final path; ignore access restrictions
   try {
@@ -318,10 +318,10 @@ void thor_worker_t::chinese_postman(Api& request) {
     GraphId end_node = reader->edge_endnode(GraphId(edge.id()));
     CPVertex start_vertex = CPVertex(start_node);
     if (!originNodeFound) {
-      if (is_starting_node(originLocation, GraphId(edge.id()))) {
-        originVertex = start_vertex;
-        originNodeFound = true;
-      }
+      // if (is_starting_node(originLocation, GraphId(edge.id()))) {
+      originVertex = start_vertex;
+      originNodeFound = true;
+      // }
     }
     G.addVertex(start_vertex);
     CPVertex end_vertex = CPVertex(end_node);
